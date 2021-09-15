@@ -12,9 +12,10 @@ module.exports = function registerEndpoint(router, { services, exceptions }) {
 
   router.get("/stands/:stand_id", async (req, res, next) => {
     const { stand_id } = req.params
-    const standService = new ItemsService('stands', req);
-
+    
     try{
+      const standService = new ItemsService('stands', req);
+
       const standInfo = await standService.readOne(stand_id, { fields: [ 'status', 'active', 'photo' ] })
       if(!standInfo) return res.json({ error: "wrong stand_id" })
 
@@ -26,10 +27,9 @@ module.exports = function registerEndpoint(router, { services, exceptions }) {
 
   router.post("/photo", async (req, res, next) => {
     const { stand_id, user_id } = req.body
-    const standService = new ItemsService('stands', req)
-    const photoService = new ItemsService('photos', req)
-
     try{
+      const standService = new ItemsService('stands', req)
+      const photoService = new ItemsService('photos', req)
       const standInfo = await standService.readOne(stand_id, { fields: [ 'status', 'active' ] })
       if(!standInfo) return res.json({ error: "wrong stand_id" })
       if(standInfo.status !== "available")
@@ -38,9 +38,21 @@ module.exports = function registerEndpoint(router, { services, exceptions }) {
       const photoKey = await photoService.createOne({ user_id, stand_id })
 
       await standService.updateOne(stand_id, { status: "photo", photo: photoKey })
+
+      const timeout = setTimeout(async () => {
+        await standService.updateOne(stand_id, { status: "available" })
+        if(!res.headersSent)
+          res.status(404).json({ status: "non-active" })
+      }, 5000)
+
+      global.actions.set(stand_id.toString(), () => {
+        clearTimeout(timeout)
+        res.json({ photo: photoKey, status: "ok" })
+      })
+
       
-      res.json({ photo: photoKey, status: "ok" })
     }catch(error){
+      console.log(error)
       return next(new ServiceUnavailableException(error.message));
     }
   })
@@ -48,9 +60,8 @@ module.exports = function registerEndpoint(router, { services, exceptions }) {
   router.post("/launch", async (req, res, next) => {
     
     const { stand_id, user_id } = req.body
-    const standService = new ItemsService('stands', { schema: req.schema, accountability: req.accountability });
-
     try{
+      const standService = new ItemsService('stands', { schema: req.schema, accountability: req.accountability });
       const standInfo = await standService.readOne(stand_id, { fields: [ 'status', 'active' ] })
       if(!standInfo) return res.json({ error: "wrong stand_id" })
       if(!standInfo.active)

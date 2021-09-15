@@ -1,6 +1,6 @@
 <template>
   <div class="layout">
-    <StartPage v-if="page === 'start'" :canPhoto="canPhoto"/>
+    <StartPage v-if="page === 'start'" :canPhoto="$store.state.canPhoto"/>
     <PhotoPage v-if="page === 'photo'"/>
     <FinalPage v-if="page === 'final'"/>
     <ExitPage v-if="page === 'exit'" />

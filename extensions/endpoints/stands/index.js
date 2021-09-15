@@ -1,17 +1,26 @@
-module.exports = function registerEndpoint(router, { services, exceptions }) {
+global.actions = new Map()
+
+module.exports = function registerEndpoint(router, { services, exceptions, getSchema }) {
 	const { ItemsService, FilesService } = services;
 	const { ServiceUnavailableException } = exceptions;
-
+  
   router.get("/:stand_id", async (req, res, next) => {
+
     const { stand_id } = req.params
     const standService = new ItemsService('stands', req);
-
+    
     try{
       const standInfo = await standService.readOne(stand_id, { fields: [ 'status', 'active', 'photo' ] })
       if(!standInfo) return res.json({ error: "wrong stand_id" })
 
+      if(global.actions.get(stand_id)){
+        global.actions.get(stand_id)()
+        global.actions.set(stand_id, null)
+      }
+      
       res.json({ status: standInfo.status, photo: standInfo.photo })
     }catch(error){
+      console.log(error)
       return next(new ServiceUnavailableException(error.message));
     }
   })
@@ -21,8 +30,6 @@ module.exports = function registerEndpoint(router, { services, exceptions }) {
     const { stand_id } = req.params
     const { data } = req.body
     const { id } = data
-
-    console.log(data)
     
     const photoService = new ItemsService('photos', req)
     const standService = new ItemsService('stands', req);
