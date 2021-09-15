@@ -41,6 +41,7 @@ module.exports = function registerEndpoint(router, { services, exceptions }) {
 
       const timeout = setTimeout(async () => {
         await standService.updateOne(stand_id, { status: "available" })
+        global.actions.set(stand_id.toString(), null)
         if(!res.headersSent)
           res.status(404).json({ status: "non-active" })
       }, 5000)
