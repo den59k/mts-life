@@ -38,7 +38,7 @@ module.exports = function registerEndpoint(router, { services, exceptions }) {
         await standService.updateOne(stand_id, { status: "available" })
       }, 5000)
 
-      res.json({ success: "success" })
+      res.json({ status: "ok" })
     }catch(error){
       console.log(error)
       return next(new ServiceUnavailableException(error.message));

@@ -3,7 +3,7 @@
     <h3>ВЫ НАХОДИТЕСЬ В ФОТОЗОНЕ МЮЗИКЛА «ШАХМАТЫ»</h3>
   </header>
   <div class="content">
-    <img src="assets/mts-logo.svg" alt="Логотип МТС" />
+    <img :src="mtsLogo" alt="Логотип МТС" />
   </div>
   <button :class="{ button: true, disable: !canPhoto }" @click="makePhoto">
     Сделать фото с героиней мьюзикла
@@ -11,7 +11,11 @@
 </template>
 
 <script>
+import mtsLogo from '../../assets/mts-logo.svg'
 export default {
+  data() {
+    return { mtsLogo }
+  },
   props: {
     canPhoto: Boolean
   },

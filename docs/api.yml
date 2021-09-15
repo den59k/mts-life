@@ -1,0 +1,152 @@
+openapi: 3.0.0
+
+servers:
+- url: https://mts.easix.ru
+  description: Общий сервер
+
+paths:
+  /api/{stand_id}: 
+    get:
+      summary: "Получение информации о стенде (для веб-страницы)"
+      parameters: 
+      - name: id
+        in: path
+        required: true
+        description: ID стенда
+        schema: 
+          type: string
+      response: 
+        '200': 
+          content: 
+            application/json: 
+              schema: 
+                type: object
+                properties: 
+                  status: 
+                    type: string
+                    enum: 
+                    - ok
+                    - busy
+                  photo: 
+                    type: string
+
+  /api/photo: 
+    post:
+      summary: "Запрос на создание фото"
+      requestBody: 
+        content: 
+          'application/json':
+            schema: 
+              type: object
+              properties: 
+                stand_id: 
+                  type: string
+                user_id:
+                  type: string
+      response: 
+        '200': 
+          content: 
+            application/json: 
+              schema: 
+                type: object
+                properties: 
+                  status: 
+                    type: string
+                    enum: 
+                    - ok
+                    - busy
+                  photo: 
+                    type: string
+
+  /stands/{stand_id}: 
+    get:
+      summary: "Получение информации о стенде (для ПО на стенде)"
+      parameters: 
+      - name: id
+        in: path
+        required: true
+        description: ID стенда
+        schema: 
+          type: string
+      response: 
+        '200': 
+          content: 
+            application/json: 
+              schema: 
+                type: object
+                properties: 
+                  active:
+                    type: boolean
+                  status: 
+                    type: string
+                    enum: 
+                    - ok
+                    - busy
+                  photo: 
+                    type: string
+
+  /files
+    post:
+      summary: "Загрузка файла на сервер"
+      parameters: 
+      - name: id
+        in: path
+        required: true
+        description: ID стенда
+        schema: 
+          type: string
+      requestBody: 
+        content: 
+          multipart/form-data:
+            schema: 
+              properties: 
+                file: 
+                  type: object
+                title
+                  type: string
+      response:
+        '200':
+          content: 
+            application/json:
+              schema:
+                type: object 
+                properties: 
+                  data: 
+                    type: object
+                    properties: 
+                      id: 
+                        type: string
+
+  /stands/{stand_id}/upload: 
+    post:
+      summary: "Загрузка изображения на сервер"
+      parameters: 
+      - name: id
+        in: path
+        required: true
+        description: ID стенда
+        schema: 
+          type: string
+      requestBody: 
+        content: 
+          application/json:
+            schema:
+              type: object 
+              properties: 
+                data: 
+                  type: object
+                  properties: 
+                    id: 
+                      type: string    
+      response: 
+        '200': 
+          content: 
+            application/json: 
+              schema: 
+                type: object
+                properties: 
+                  status: 
+                    type: string
+                    enum: 
+                    - ok
+                    - failed

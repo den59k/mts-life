@@ -3,14 +3,18 @@
     <h3>Внимание на фотозону</h3>
   </header>
   <div class="content">
-    <img src="assets/mts-logo.svg" alt="Логотип МТС" />
+    <img :src="mtsLogo" alt="Логотип МТС" />
   </div>
 </template>
 
 <script>
+import mtsLogo from '../../assets/mts-logo.svg'
 import { STAND_ID } from '../../constants'
 import { GET } from '../../libs/query'
 export default {
+  data() {
+    return { mtsLogo }
+  },
   name: "PhotoPage",
   mounted() {
     const ajax = async () => {

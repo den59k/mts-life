@@ -5,10 +5,12 @@ import { STAND_ID } from '../constants'
 
 const pageStore = createStore ({
   state() {
+    const params = new URLSearchParams(window.location.search)
+
     return {
       page: "start",
       photoId: "",
-      id: nanoid(),
+      id: params.get("id") || nanoid(),
       message: null
     }
   },
