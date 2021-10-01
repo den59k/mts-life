@@ -9,7 +9,7 @@ const pageStore = createStore ({
     const attempts = window.localStorage.getItem("attempts")
 
     return {
-      page: "final",
+      page: "start",
       photoId: "",
       id: params.get("id") || nanoid(),
       message: null,
