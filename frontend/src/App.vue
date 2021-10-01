@@ -1,5 +1,5 @@
 <template>
-  <div class="layout">
+  <div :class="['layout', page]">
     <StartPage v-if="page === 'start'" :canPhoto="$store.state.canPhoto"/>
     <PhotoPage v-if="page === 'photo'"/>
     <FinalPage v-if="page === 'final'"/>
@@ -59,13 +59,23 @@ export default {
 </script>
 
 <style lang="sass">
-@import './styles'
-@import './animations'
+@import './styles/styles'
+@import './styles/animations'
 
 .layout
   display: flex
   flex-direction: column
   min-height: 100vh
+  max-width: 400px
+  margin: 0 auto
+  padding: 0 2em
+
+  @media(max-width: 300px)
+    padding: 0 1em
+
+  &.final
+    background-color: white
+    color: black
 
 .layout-message
   position: fixed

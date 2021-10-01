@@ -1,9 +1,6 @@
 module.exports = {
-  configureWebpack: {
-    plugins: [
-      
-    ]
-  },
+  outputDir: 'dist',
+  assetsDir: '_assets',
   devServer: {
     proxy: 'http://localhost:8055'
   },

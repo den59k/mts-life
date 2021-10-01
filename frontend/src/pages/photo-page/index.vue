@@ -1,19 +1,21 @@
 <template>
   <header class="header">
-    <h3>Внимание на фотозону</h3>
+    <img :src="mtsLogo"/>
   </header>
   <div class="content">
-    <img :src="mtsLogo" alt="Логотип МТС" />
+    <h2>Внимание на экран фотозоны</h2>
   </div>
+  <img class="logo2" :src="logo2"/>
 </template>
 
 <script>
 import mtsLogo from '../../assets/mts-logo.svg'
+import logo2 from '../../assets/logo2.png'
 import { STAND_ID } from '../../constants'
 import { GET } from '../../libs/query'
 export default {
   data() {
-    return { mtsLogo }
+    return { mtsLogo, logo2 }
   },
   name: "PhotoPage",
   mounted() {
@@ -34,9 +36,5 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-
-  img
-    width: 60vw
-    max-width: 300px
 
 </style>
