@@ -2,15 +2,16 @@
   <div class="content">
     <div class="imageWrapper">
       <img :src="`/assets/${$store.state.photoId}`" class="image"/>
-      <div class="label">
-        Осталась одна попытка
+      <div v-if="attempts < 2" class="label">
+        {{strAttempts}}
       </div>
     </div>
   </div>
   <div class="panel">
-    <button @click="$store.commit('setPage', 'start')">
+    <button v-if="attempts > 0" @click="$store.dispatch('makeAnotherPhoto')">
       Переснять
     </button>
+    <div v-else></div>
     <button @click="download">
       Сохранить
    </button>
@@ -21,8 +22,13 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 
 export default {
+  computed: mapState({
+    attempts: state => state.attempts,
+    strAttempts: state => ['Закончился лимит фото', 'Осталась одна попытка', 'Осталось две попытки', 'Осталось три попытки'][state.attempts]
+  }),
   methods: {
     async download() {
       const image = await fetch(`assets/${this.$store.state.photoId}`)

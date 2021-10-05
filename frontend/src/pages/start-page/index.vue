@@ -5,21 +5,13 @@
   <div class="content">
     <h2>Добро пожаловать<br/> в МТС Live</h2>
   </div>
-  <button v-if="attempts > 0" :class="{ button: true, disable: !canPhoto }" @click="makePhoto">
+  <button :class="{ button: true, disable: !canPhoto }" @click="makePhoto">
     Сделать фото<br/> с Анастасией Стоцкой
   </button>
   <img class="logo2" :src="logo2"/>
-  <div v-if="attempts === 0" class="attempts">
-    У вас не осталось попыток
-  </div>
-  <div v-else-if="attempts !== 3" class="attempts">
-    У вас осталось {{strAttempts}}
-  </div>
 </template>
 
 <script>
-import { num } from '../../libs/rus'
-import { mapState } from 'vuex'
 import mtsLogo from '../../assets/mts-logo.svg'
 import logo2 from '../../assets/logo2.png'
 
@@ -30,10 +22,6 @@ export default {
   props: {
     canPhoto: Boolean
   },
-  computed: mapState({
-      attempts: state => state.attempts,
-      strAttempts: state => num(state.attempts, "попытка", "попытки", "попыток")
-  }),
   methods: {
     makePhoto() {
       this.$store.dispatch("photo")

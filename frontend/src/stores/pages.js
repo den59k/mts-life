@@ -6,15 +6,16 @@ import { STAND_ID } from '../constants'
 const pageStore = createStore ({
   state() {
     const params = new URLSearchParams(window.location.search)
+    window.localStorage.removeItem("attempts")
     const attempts = window.localStorage.getItem("attempts")
-
+    
     return {
       page: "start",
       photoId: "",
       id: params.get("id") || nanoid(),
       message: null,
       canPhoto: true,
-      attempts: typeof attempts === "number"? attempts: 3
+      attempts: typeof attempts === "number"? attempts: 2
     }
   },
   mutations: {
@@ -63,7 +64,7 @@ const pageStore = createStore ({
       if(this.messageTimeout) clearTimeout(this.messageTimeout)
       this.messageTimeout = setTimeout(() => {
         this.commit("setMessage", null)
-      }, 2000)
+      }, 3000)
     },
     makeAnotherPhoto(){
       this.commit("setPage", "start")

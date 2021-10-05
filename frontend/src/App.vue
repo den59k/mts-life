@@ -94,7 +94,8 @@ export default {
   position: fixed
   width: 80vw
   max-width: 300px
-  background-color: white
+  background-color: #111111
+  border: 2px solid white
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2)
   border-radius: 15px
   text-align: center
@@ -106,5 +107,7 @@ export default {
   box-sizing: border-box
   font-weight: 500
   line-height: 1.5em
+  font-weight: 900
+  font-family: "MTS Sans", serif
 
 </style>
