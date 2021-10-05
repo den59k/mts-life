@@ -15,9 +15,6 @@
     <button @click="download">
       Сохранить
    </button>
-   <!-- <button @click="$store.dispatch('exitApp')">
-      <v-icon name="long-arrow-alt-right" style="height: 1.7em"/>
-   </button> -->
   </div>
 </template>
 
