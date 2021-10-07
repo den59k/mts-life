@@ -65,7 +65,9 @@ export default {
 .layout
   display: flex
   flex-direction: column
-  min-height: 100vh
+  height: 100vh
+  height: -webkit-fill-available
+  height: calc(var(--vh, 1vh) * 100)
   max-width: 400px
   margin: 0 auto
   padding: 0 2em
