@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-    <h3>Выход из приложения</h3>
+    <h3>Закройте эту вкладку</h3>
   </header>
 </template>
 

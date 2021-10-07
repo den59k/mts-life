@@ -1,0 +1,7 @@
+{
+  "name": "MTS Live app",
+  "description": "Selfie-start photozone",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": ["tabs"]
+}

@@ -85,8 +85,14 @@ export default {
       justify-content: center
       font-family: "MTS Sans", sans-serif
       font-weight: 900
-      padding: 0.5em 1em
-      font-size: 0.9em
+      padding: 0.8em 0
+      flex: 1 1 auto
+      font-size: 1em
+      line-height: 1.5em
+      &:not(:last-child)
+        margin-right: 2em
+        @media(max-width: 350px)
+          margin-right: 0.5em
       svg
         height: 1.4em
   
