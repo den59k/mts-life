@@ -11,7 +11,6 @@
 <script>
 import mtsLogo from '../../assets/mts-logo.svg'
 import logo2 from '../../assets/logo2.png'
-import { STAND_ID } from '../../constants'
 import { GET } from '../../libs/query'
 export default {
   data() {
@@ -20,7 +19,7 @@ export default {
   name: "PhotoPage",
   mounted() {
     const ajax = async () => {
-      const standInfo = await GET("/items/stands/"+STAND_ID, { "fields[]": "id,status,photo.file" })
+      const standInfo = await GET("/items/stands/"+this.$store.state.standId, { "fields[]": "id,status,photo.file" })
       if(standInfo.status === "available") return this.$store.commit("setPage", "start")
       if(standInfo.status === "final") {
         console.log(standInfo)
@@ -30,7 +29,7 @@ export default {
       await new Promise(res => setTimeout(res, 500))
       ajax()
     }
-    setTimeout(() => ajax(), 2000)
+    setTimeout(() => ajax(), 5000)
   }
 }
 </script>

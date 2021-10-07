@@ -15,7 +15,8 @@ const pageStore = createStore ({
       id: params.get("id") || nanoid(),
       message: null,
       canPhoto: true,
-      attempts: typeof attempts === "number"? attempts: 2
+      attempts: typeof attempts === "number"? attempts: 2,
+      standId: parseInt(params.get("stand_id")) || STAND_ID
     }
   },
   mutations: {
@@ -43,15 +44,15 @@ const pageStore = createStore ({
   actions: {
     async photo (){
       this.commit("setCanPhoto", false)
-      const resp = await REST("/api/photo", { user_id: this.state.id, stand_id: STAND_ID } )
+      const resp = await REST("/api/photo", { user_id: this.state.id, stand_id: this.state.standId } )
       this.commit("setCanPhoto", true)
 
       if(resp.status === "ok")
         this.commit("setPage", "photo")
       if(resp.status === "busy")
-        this.dispatch("message", "Стенд в данное время уже используется")
+        this.dispatch("message", "Фотозона в данное время уже используется")
       if(resp.status === "non-active")
-        this.dispatch("message", "Извините, стенд в данное время не активен")
+        this.dispatch("message", "Извините, фотозона в данное время не активна")
     },
     exitApp() {
       console.log("exit app...")
@@ -64,7 +65,7 @@ const pageStore = createStore ({
       if(this.messageTimeout) clearTimeout(this.messageTimeout)
       this.messageTimeout = setTimeout(() => {
         this.commit("setMessage", null)
-      }, 3000)
+      }, 3500)
     },
     makeAnotherPhoto(){
       this.commit("setPage", "start")
