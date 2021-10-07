@@ -55,9 +55,11 @@ const pageStore = createStore ({
         this.dispatch("message", "Извините, фотозона в данное время не активна")
     },
     exitApp() {
-      console.log("exit app...")
-      this.commit("setPage", "exit")
-      window.location.assign("#exit")
+      //console.log("exit app...")
+      //this.commit("setPage", "exit")
+      //window.location.assign("#exit")
+      console.log("exit")
+      window.close()
     },
     message(_, text) {
       this.commit("setMessage", text)
