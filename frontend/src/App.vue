@@ -48,7 +48,6 @@ export default {
   },
   methods: {
     async fetchData() {
-      console.log(this.$store.state )
       const stand = await GET("/items/stands/"+STAND_ID, { "fields[]": "*" })
       
       if(stand.status)

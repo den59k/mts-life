@@ -57,7 +57,7 @@ const pageStore = createStore ({
     exitApp() {
       //console.log("exit app...")
       //this.commit("setPage", "exit")
-      //window.location.assign("#exit")
+      window.location.assign("#exit")
       console.log("exit")
       window.close()
     },

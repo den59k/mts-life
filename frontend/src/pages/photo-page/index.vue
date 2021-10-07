@@ -22,7 +22,6 @@ export default {
       const standInfo = await GET("/items/stands/"+this.$store.state.standId, { "fields[]": "id,status,photo.file" })
       if(standInfo.status === "available") return this.$store.commit("setPage", "start")
       if(standInfo.status === "final") {
-        console.log(standInfo)
         this.$store.commit("setPhotoId", standInfo.photo.file)
         return this.$store.commit("setPage", "final")
       }
