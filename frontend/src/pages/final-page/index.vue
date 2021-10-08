@@ -20,6 +20,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import fileDownload from 'js-file-download'
 
 export default {
   computed: mapState({
@@ -29,15 +30,10 @@ export default {
   methods: {
     async download() {
       const image = await fetch(`assets/${this.$store.state.photoId}`)
-      const imageBlog = await image.blob()
-      const imageURL = URL.createObjectURL(imageBlog)
+      const imageBlob = await image.blob()
+      //const imageURL = URL.createObjectURL(imageBlog)
 
-      const link = document.createElement('a')
-      link.href = imageURL
-      link.download = 'photo.jpg'
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
+      fileDownload(imageBlob, 'photo.jpg')
 
       this.$store.dispatch('exitApp')
     }
