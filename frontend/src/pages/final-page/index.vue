@@ -33,7 +33,7 @@ export default {
       const imageBlob = await image.blob()
       //const imageURL = URL.createObjectURL(imageBlog)
 
-      fileDownload(imageBlob, 'photo.jpg')
+      fileDownload(imageBlob, 'photo.jpg', 'image/jpg')
 
       this.$store.dispatch('exitApp')
     }
