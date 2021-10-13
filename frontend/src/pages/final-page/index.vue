@@ -16,7 +16,7 @@
       Сохранить
    </button>
   </div>
-  <a :href="`/assets/${$store.state.photoId}`" download="photo.jpg">Вторая ссылка</a>
+  <a :href="`/assets/${$store.state.photoId}`" download="photo.jpg" target="_blank">Вторая ссылка</a>
 </template>
 
 <script>
@@ -34,7 +34,7 @@ export default {
       const imageBlob = await image.blob()
       //const imageURL = URL.createObjectURL(imageBlog)
 
-      fileDownload(imageBlob, 'photo.jpg', 'image/jpg')
+      fileDownload(imageBlob, 'photo.jpg', 'image/jpeg')
 
       //this.$store.dispatch('exitApp')
     }
