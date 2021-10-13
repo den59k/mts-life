@@ -29,7 +29,7 @@ export default {
   }),
   methods: {
     async download() {
-      const image = await fetch(`assets/${this.$store.state.photoId}`)
+      const image = await fetch(`/assets/${this.$store.state.photoId}`)
       const imageBlob = await image.blob()
       //const imageURL = URL.createObjectURL(imageBlog)
 
