@@ -16,6 +16,7 @@
       Сохранить
    </button>
   </div>
+  <a :href="`/assets/${$store.state.photoId}`" download="photo.jpg">Вторая ссылка</a>
 </template>
 
 <script>
