@@ -2,7 +2,7 @@ module.exports = {
   outputDir: 'dist',
   assetsDir: '_assets',
   devServer: {
-    proxy: 'http://localhost:8055'
+    proxy: 'https://mts.easix.ru'
   },
   transpileDependencies: [
     /\bvue-awesome\b/

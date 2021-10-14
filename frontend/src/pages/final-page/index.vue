@@ -50,7 +50,7 @@ export default {
     flex-direction: column
 
     .label
-      font-weight: 900
+      font-weight: 700
       background-color: black
       color: white
       text-align: center
@@ -80,13 +80,13 @@ export default {
       align-items: center
       justify-content: center
       font-family: "MTS Sans", sans-serif
-      font-weight: 900
-      padding: 0.8em 0
+      font-weight: 500
+      height: 44px
       flex: 1 1 auto
       font-size: 1em
       line-height: 1.5em
       &:not(:last-child)
-        margin-right: 2em
+        margin-right: 0.6em
         @media(max-width: 350px)
           margin-right: 0.5em
       svg

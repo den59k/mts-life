@@ -6,7 +6,7 @@
     <h2>Добро пожаловать<br/> в МТС Live</h2>
   </div>
   <button :class="{ button: true, disable: !canPhoto }" @click="makePhoto">
-    Сделать фото<br/> с Анастасией Стоцкой
+    Сделать фото с Анастасией Стоцкой
   </button>
   <img class="logo2" :src="logo2"/>
 </template>

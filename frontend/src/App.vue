@@ -108,7 +108,6 @@ export default {
   box-sizing: border-box
   font-weight: 500
   line-height: 1.5em
-  font-weight: 900
   font-family: "MTS Sans", serif
 
 </style>
