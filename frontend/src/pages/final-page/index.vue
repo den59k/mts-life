@@ -35,7 +35,7 @@ export default {
 
       fileDownload(imageBlob, 'photo.jpg', 'image/jpeg')
 
-      //this.$store.dispatch('exitApp')
+      this.$store.dispatch('exitApp')
     }
   }
 }
