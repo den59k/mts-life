@@ -35,6 +35,8 @@ export default {
 
       fileDownload(imageBlob, 'photo.jpg', 'image/jpeg')
 
+      await new Promise(res => setTimeout(res, 200))
+
       this.$store.dispatch('exitApp')
     }
   }
