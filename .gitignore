@@ -1,2 +1,7 @@
 /node_modules
 /uploads
+
+.yarn
+.env
+.yarnrc.yml
+yarn.lock

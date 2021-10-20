@@ -62,7 +62,7 @@ module.exports = function registerEndpoint(router, { services, exceptions }) {
     
     const { stand_id, user_id } = req.body
     try{
-      const standService = new ItemsService('stands', { schema: req.schema, accountability: req.accountability });
+      const standService = new ItemsService('stands', req);
       const standInfo = await standService.readOne(stand_id, { fields: [ 'status', 'active' ] })
       if(!standInfo) return res.json({ error: "wrong stand_id" })
       if(!standInfo.active)
