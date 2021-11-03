@@ -1,0 +1,1 @@
+export const STAND_ID = 1

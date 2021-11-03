@@ -1,38 +1,22 @@
 <template>
-  <header class="header">
-    <img :src="mtsLogo"/>
-  </header>
-  <div class="content">
-    <h2>Внимание на экран фотозоны</h2>
+  <div class="layout layout-container">
+    <img class="mts-logo" src="/_assets/mts-logo.svg" alt="Лого МТС"/>
+    <h2 class="h2">Внимание<br/>на экран фотозоны</h2>
   </div>
-  <img class="logo2" :src="logo2"/>
 </template>
 
 <script>
-import mtsLogo from '../../assets/mts-logo.svg'
-import logo2 from '../../assets/logo2.png'
-import { GET } from '../../libs/query'
 export default {
-  data() {
-    return { mtsLogo, logo2 }
-  },
-  name: "PhotoPage",
-  mounted() {
-    const ajax = async () => {
-      const standInfo = await GET("/items/stands/"+this.$store.state.standId, { "fields[]": "id,status,photo.file" })
-      if(standInfo.status === "available") return this.$store.commit("setPage", "start")
-      if(standInfo.status === "final") {
-        this.$store.commit("setPhotoId", standInfo.photo.file)
-        return this.$store.commit("setPage", "final")
-      }
-      await new Promise(res => setTimeout(res, 500))
-      ajax()
-    }
-    setTimeout(() => ajax(), 5000)
-  }
+  
 }
 </script>
 
 <style lang="sass" scoped>
+.h2
+  text-align: center
+  text-transform: uppercase
 
+.mts-logo
+  position: absolute
+  top: 3em
 </style>

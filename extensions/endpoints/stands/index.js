@@ -19,15 +19,15 @@ module.exports = function registerEndpoint(router, { services, exceptions, getSc
     const standService = new ItemsService('stands', req);
     
     try{
-      const standInfo = await standService.readOne(stand_id, { fields: [ 'status', 'active', 'photo' ] })
+      const standInfo = await standService.readOne(stand_id, { fields: [ 'status', 'active', 'photo', 'selected_scenario' ] })
       if(!standInfo) return res.json({ error: "wrong stand_id" })
 
       if(global.actions.get(stand_id)){
         global.actions.get(stand_id)()
         global.actions.set(stand_id, null)
       }
-      
-      res.json({ status: standInfo.status, photo: standInfo.photo })
+
+      res.json({ status: standInfo.status, photo: standInfo.photo, scenario: standInfo.selected_scenario })
     }catch(error){
       console.log(error)
       return next(new ServiceUnavailableException(error.message));

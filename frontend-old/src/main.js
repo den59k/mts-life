@@ -1,14 +1,14 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import store from './store'
+import pageStore from './stores/pages'
 
 const app = createApp(App)
-app.use(store)
+app.use(pageStore)
 app.mount('#app')
 
 function resize(){
   // We execute the same script as before
-  let vh = window.innerHeight * 0.01 - 0.01;
+  let vh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty('--vh', `${vh}px`);
 }
 window.addEventListener('resize', resize);
