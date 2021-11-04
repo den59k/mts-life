@@ -1,3 +1,5 @@
+global.swipeTimeouts = new Map()
+
 module.exports = function registerEndpoint(router, { services, exceptions }) {
 	const { ItemsService } = services;
 	const { ServiceUnavailableException } = exceptions;
@@ -43,9 +45,21 @@ module.exports = function registerEndpoint(router, { services, exceptions }) {
       if(!standInfo) return res.json({ error: "wrong stand_id" })
       if(standInfo.user_id != user_id) return res.json({ error: "busy" })
       if(standInfo.status !== "available") return res.json({ error: "on photo screen" })
- 
+      
+      if(swipeTimeouts.has(stand_id)){
+        clearTimeout(swipeTimeouts.get(stand_id))
+        swipeTimeouts.delete(stand_id)
+      }
+
       await standService.updateOne(stand_id, { selected_scenario: scenario })
 
+      const timeout = setTimeout(async () => {
+        await standService.updateOne(stand_id, { selected_scenario: "" })
+        swipeTimeouts.delete(stand_id)
+      }, 20000)
+
+      swipeTimeouts.set(stand_id, timeout)
+      
       res.json({ status: "ok" })
     }catch(error){
       res.json({ error: "failed" })

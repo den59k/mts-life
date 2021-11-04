@@ -2,6 +2,7 @@ import { createStore } from 'vuex'
 import { REST } from '../libs/query'
 import { STAND_ID } from '../libs/constants'
 import { nanoid } from 'nanoid'
+import fileDownload from 'js-file-download'
 
 const store = createStore({
   state(){
@@ -16,7 +17,8 @@ const store = createStore({
       stand_id: parseInt(params.get("stand_id")) || STAND_ID,
       attempts: typeof attempts === "number"? attempts: 2,
       standData: null,
-      alertText: null
+      alertText: null,
+      photo: null
     }
   },
   getters: {
@@ -26,7 +28,8 @@ const store = createStore({
     setPage: (state, pageName) => state.page = pageName,
     setAlert: (state, alert) => state.alert = alert,
     setStandData: (state, standData) => state.standData = standData,
-    setScenario: (state, scenario) => state.scenario = scenario
+    setScenario: (state, scenario) => state.scenario = scenario,
+    setPhoto: (state, photoSrc) => state.photo = photoSrc
   },
   actions: {
     async launch(){
@@ -53,6 +56,23 @@ const store = createStore({
       this.commit("setAlert", str)
       await new Promise(res => setTimeout(res, 3000))
       this.commit("setAlert", null)
+    },
+    async makePhotoAgain(){
+      this.commit("setPage", "start")
+    },
+    async savePhoto(){
+      const image = await fetch(`${this.state.photo}`)
+      const imageBlob = await image.blob()
+      //const imageURL = URL.createObjectURL(imageBlog)
+
+      fileDownload(imageBlob, 'photo.jpg', 'image/jpeg')
+
+      await new Promise(res => setTimeout(res, 200))
+
+      this.dispatch("exitApp")
+    },
+    async exitApp(){
+      this.commit("setPage", "exit")
     }
   }
 })

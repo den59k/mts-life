@@ -1,0 +1,14 @@
+.fade-enter-active, .fade-leave-active
+  transition: opacity 0.3s, transform 0.3s
+
+  &.delay300
+    transition-delay: 0.2s
+
+.fade-enter-from, .fade-leave-to
+  opacity: 0
+
+  &.scale
+    transform: scale(0.8)
+
+  &.move
+    transform: translateY(3em)

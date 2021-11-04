@@ -1,7 +1,8 @@
 <template>
-  <start-page v-if="page == 'start'"/>
-  <photo-page v-if="page == 'photo'"/>
-  <photo-page v-if="page == 'final'"/>
+  <start-page v-if="page === 'start'"/>
+  <photo-page v-if="page === 'photo'"/>
+  <final-page v-if="page === 'final'"/>
+  <exit-page v-if="page === 'exit'"/>
 </template>
 
 <script>
@@ -10,14 +11,17 @@ import 'swiper/swiper.min.css'
 
 import StartPage from './pages/start-page'
 import PhotoPage from './pages/photo-page'
+import FinalPage from './pages/final-page'
+import ExitPage from './pages/exit-page'
 import { mapState } from 'vuex'
 
 export default {
-  components: { StartPage, PhotoPage },
+  components: { StartPage, PhotoPage, FinalPage, ExitPage },
   name: 'App',
   computed: mapState([ 'page' ]),
   mounted(){
-    this.$store.commit("setPage", 'start')
+    //this.$store.commit("setPage", 'final')
+    //this.$store.commit("setPhoto", '/_assets/photo.jpg')
   }
 }
 </script>

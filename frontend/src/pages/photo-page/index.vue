@@ -6,8 +6,22 @@
 </template>
 
 <script>
+import { GET } from '../../libs/query'
+
 export default {
-  
+  mounted() {
+    const ajax = async () => {
+      const standInfo = await GET("/items/stands/"+this.$store.state.stand_id, { "fields[]": "id,status,photo.file" })
+      if(standInfo.status === "available") return this.$store.commit("setPage", "start")
+      if(standInfo.status === "final") {
+        this.$store.commit("setPhoto", "/assets/" + standInfo.photo.file)
+        return this.$store.commit("setPage", "final")
+      }
+      await new Promise(res => setTimeout(res, 500))
+      ajax()
+    }
+    setTimeout(() => ajax(), 5000)
+  }
 }
 </script>
 
