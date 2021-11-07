@@ -9,6 +9,9 @@ h1
   @media(min-width: 400px)
     max-width: 400px * 0.3
 
+.anim
+  transition: opacity 0.3s, visibility 0.3s, transform 0.3s
+
 .btn
   background-color: $primary
   text-transform: uppercase
@@ -22,6 +25,12 @@ h1
   &.alt
     background-color: white
     color: black
+
+  &.hidden
+    visibility: hidden
+    opacity: 0
+    pointer-events: none
+    transform: scale(0.8)
 
 .layout
   display: flex

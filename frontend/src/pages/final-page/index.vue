@@ -25,8 +25,8 @@ export default {
   mounted(){
     setTimeout(() => this.showPhoto = true, 700)
   },
-  computed: mapState([ 'photo' ]),
-  methods: mapActions([ 'savePhoto', 'makePhotoAgain' ])
+  computed: mapState('mts', [ 'photo' ]),
+  methods: mapActions('mts', [ 'savePhoto', 'makePhotoAgain' ])
 }
 </script>
 

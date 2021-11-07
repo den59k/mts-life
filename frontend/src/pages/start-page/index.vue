@@ -29,7 +29,7 @@
       </swiper>
     </div>
     
-    <button class="btn" @click="makePhoto">Сделать фото</button>
+    <button class="btn anim" :class="{ hidden: pending }" @click="_makePhoto">Сделать фото</button>
     <div class="layout-label">Выберите<br/>сценарий<br/>для фото</div>
   </div>
   <div class="layout layout-container" v-if="!loaded">
@@ -50,7 +50,8 @@ export default {
       Virtual,
       images: [  ],
       swiper: null,
-      loaded: false
+      loaded: false,
+      pending: false
     }
   },
   components: {
@@ -76,7 +77,12 @@ export default {
     },
     slideNext (){ this.swiper.slideNext() },
     slidePrev (){ this.swiper.slidePrev() },
-    ...mapActions(['launch', 'changeScenario', 'makePhoto'])
+    async _makePhoto(){
+      this.pending = true
+      await this.makePhoto()
+      this.pending = false
+    },
+    ...mapActions('mts', ['launch', 'changeScenario', 'makePhoto'])
   }
 }
 </script>

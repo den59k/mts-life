@@ -6,16 +6,23 @@
 </template>
 
 <script>
+import { mapMutations, mapState } from 'vuex'
 import { GET } from '../../libs/query'
 
 export default {
+  
+  computed: mapState("mts", [ "stand_id" ]),
+  methods: {
+    ...mapMutations("pages", [ "setPage" ]),
+    ...mapMutations("mts", [ "setPhoto" ])
+  },
   mounted() {
     const ajax = async () => {
-      const standInfo = await GET("/items/stands/"+this.$store.state.stand_id, { "fields[]": "id,status,photo.file" })
-      if(standInfo.status === "available") return this.$store.commit("setPage", "start")
+      const standInfo = await GET("/items/stands/"+this.stand_id, { "fields[]": "id,status,photo.file" })
+      if(standInfo.status === "available") return this.setPage("start")
       if(standInfo.status === "final") {
-        this.$store.commit("setPhoto", "/assets/" + standInfo.photo.file)
-        return this.$store.commit("setPage", "final")
+        this.setPhoto("/assets/" + standInfo.photo.file)
+        return this.setPage("final")
       }
       await new Promise(res => setTimeout(res, 500))
       ajax()
