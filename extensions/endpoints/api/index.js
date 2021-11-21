@@ -95,6 +95,10 @@ module.exports = function registerEndpoint(router, { services, exceptions }) {
         res.json({ photo: photoKey, status: "ok" })
       })
 
+      if (swipeTimeouts.has(stand_id)) {
+        clearTimeout(swipeTimeouts.get(stand_id))
+        swipeTimeouts.delete(stand_id)
+      }
       
     }catch(error){
       console.log(error)
