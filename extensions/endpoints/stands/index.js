@@ -112,7 +112,7 @@ module.exports = function registerEndpoint(router, { services, exceptions, getSc
 
       setTimeout(async () => {
         await standService.updateOne(stand_id, { status: "available", selected_scenario: "" })
-      }, 15000)
+      }, 10000)
 
       res.json({ status: "ok" })
     }catch(error){
