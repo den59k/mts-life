@@ -1,4 +1,6 @@
 const dayjs = require('dayjs')
+const csv = require('fast-csv');
+const fs = require('fs')
 
 global.actions = new Map()
 
@@ -119,6 +121,41 @@ module.exports = function registerEndpoint(router, { services, exceptions, getSc
       console.log(error)
       return next(new ServiceUnavailableException(error.message));
     }
+  })
+
+  router.get("/:stand_id/stats", async (req, res) => {
+
+    const { stand_id } = req.params
+    const _stand_id = parseInt(stand_id)
+
+    const schema = await getSchema()
+    const photoService = new ItemsService('photos', { schema })
+    const resp = await photoService.readByQuery({ 
+      fields: [ 'id', 'file.filename_disk', 'date_created', 'user_id' ], 
+      filter: { stand_id: { _eq: _stand_id } },
+      sort: [ 'id' ]
+    })
+
+    const rows = [
+      [ 'ID', 'Date', 'Time', 'User ID' ]
+    ]
+
+    for (let item of resp) {
+      const date = dayjs(item.date_created)
+      rows.push([
+        item.id,
+        date.format('DD.MM.YYYY'),
+        date.format('HH:mm'),
+        item.user_id
+      ])
+    }
+
+    const buffer = await csv.writeToBuffer(rows, {
+      delimiter: ";"
+    })
+    
+    res.set({ 'Content-Type': 'text/csv' })
+    res.send(buffer)
   })
 
 }
