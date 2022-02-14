@@ -13,6 +13,7 @@
   "dependencies": {
     "dayjs": "^1.10.7",
     "directus": "^9.0.0-rc.92",
+    "fast-csv": "^4.3.6",
     "pg": "^8.7.1"
   }
 }
