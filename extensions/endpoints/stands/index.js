@@ -1,6 +1,10 @@
 const dayjs = require('dayjs')
+const customParseFormat = require('dayjs/plugin/customParseFormat')
+const weekOfYear = require('dayjs/plugin/weekOfYear')
 const csv = require('fast-csv');
 const fs = require('fs')
+dayjs.extend(customParseFormat)
+dayjs.extend(weekOfYear)
 
 global.actions = new Map()
 
@@ -126,35 +130,134 @@ module.exports = function registerEndpoint(router, { services, exceptions, getSc
   router.get("/:stand_id/stats", async (req, res) => {
 
     const { stand_id } = req.params
-    const { days } = req.query
-    const _stand_id = parseInt(stand_id)
+    const { days, start, end } = req.query
+    const group = req.query.group || "advanced"
+
+    const filter = { }
+    if (stand_id != "-1") {
+      if (stand_id.includes(",")) {
+        filter.stand_id = { _in: stand_id.split(",").map(st => parseInt(st)).filter(i => !isNaN(i)) }
+      } else {
+        if (!parseInt(stand_id)) {
+          return res.send({ error: "stand_id is not int"})
+        }
+        filter.stand_id = { _eq: parseInt(stand_id) } 
+      }
+    }
+
+    if (end) {
+      filter.date_created._lte = dayjs(end, "DD.MM.YYYY").toISOString()
+    } else {
+      filter.date_created = { _lte: new Date().toISOString() }
+    }
+
+    if (start) {
+      filter.date_created._gte = dayjs(start, "DD.MM.YYYY").toISOString()
+    }
+    if (days) {
+      filter.date_created._gte = dayjs(filter.date_created._lte).subtract(days, "day").toISOString()
+    }
+    
+    if (filter.date_created._gte && filter.date_created._lte) {
+      filter.date_created = { _between: [ filter.date_created._gte, filter.date_created._lte ] }
+    }
 
     const schema = await getSchema()
     const photoService = new ItemsService('photos', { schema })
-    const resp = await photoService.readByQuery({ 
-      fields: [ 'id', 'file.filename_disk', 'date_created', 'user_id' ], 
-      filter: { stand_id: { _eq: _stand_id } },
-      sort: [ 'id' ],
-      limit: -1
+    const standService = new ItemsService('stands', { schema })
+
+    const _stands = await standService.readByQuery({
+      fields: [ "id", "name" ]
     })
-
-    const rows = [
-      [ 'ID', 'Date', 'Time', 'User ID' ]
-    ]
-
-   let nowDate = null
-    if (days)
-      nowDate = dayjs().subtract(days, 'day')
     
-    for (let item of resp) {
-      const date = dayjs(item.date_created)
-      if (nowDate && date.isBefore(nowDate, 'day')) continue
-      rows.push([
-        item.id,
-        date.format('DD.MM.YYYY'),
-        date.format('HH:mm'),
-        item.user_id
-      ])
+    const stands = []
+    for (let stand of _stands){ 
+      stands[stand.id] = stand
+    }
+
+    const rows = []     
+    let lastDate = null
+
+    if (group === "advanced") {
+
+      const resp = await photoService.readByQuery({ 
+        fields: [ 'id', 'file.filename_disk', 'date_created', 'user_id', 'stand_id' ], 
+        filter,
+        sort: [ 'id' ],
+        limit: -1
+      })
+
+      rows.push([ 'ID', 'Stand', 'Date', 'Time', 'User ID' ])
+
+      for (let item of resp) {
+        const date = dayjs(item.date_created)
+        rows.push([
+          item.id,
+          stands[item.stand_id].name,
+          date.format('DD.MM.YYYY'),
+          date.format('HH:mm'),
+          item.user_id
+        ])
+      }
+    } else {
+
+      let _group = [ "year(date_created)", "month(date_created)",  "stand_id" ]
+
+      if (group === "day") {
+        _group = [ "year(date_created)", "month(date_created)", "day(date_created)",  "stand_id" ]
+      }
+
+      if (group === "week") {
+        _group = [ "year(date_created)", "month(date_created)", "week(date_created)",  "stand_id" ]
+      }
+
+      const photos = await photoService.readByQuery({ 
+        aggregate: {
+          count: [ "*" ],
+          countDistinct: [ "user_id" ],
+        },
+        group: _group,
+        filter,
+        limit: -1
+      })
+
+      const firstDay = dayjs().set("day", 0)
+
+      rows.push([ "Stand", "Photos", "Users" ])
+
+      for (let item of photos) {
+        // const date = dayjs(item.date_created)
+        let date = item.date_created_year + "." + item.date_created_month
+        if (group === "week") date = date + "." + item.date_created_week
+        if (group === "day") date = date + "." + item.date_created_day
+
+        if (date !== lastDate) {
+          if (group === "week") {
+            rows.push([ 
+              firstDay.year(item.date_created_year).week(parseInt(item.date_created_week)+1).format("DD.MM.YYYY") + "-" + 
+              firstDay.year(item.date_created_year).week(parseInt(item.date_created_week)+1).day(6).format("DD.MM.YYYY"),"" 
+            ])
+          }
+          if (group === "day") {
+            rows.push([
+              firstDay.year(item.date_created_year).month(parseInt(item.date_created_month)-1).date(item.date_created_day).format("DD.MM.YYYY")
+            ])
+          }
+
+          if (group === "month") {
+            rows.push([ 
+              firstDay.year(item.date_created_year).month(parseInt(item.date_created_month)-1).date(1).format("DD.MM.YYYY") + "-" + 
+              firstDay.year(item.date_created_year).month(parseInt(item.date_created_month)).date(0).format("DD.MM.YYYY"),"" 
+            ])
+          }
+        }
+        rows.push([
+          stands[item.stand_id].name,
+          item.count,
+          item.countDistinct.user_id
+        ])
+        lastDate = date
+      }
     }
 
     const buffer = await csv.writeToBuffer(rows, {
