@@ -145,11 +145,10 @@ module.exports = function registerEndpoint(router, { services, exceptions, getSc
       }
     }
 
+    filter.date_created = { _lte: new Date().toISOString() }
     if (end) {
       filter.date_created._lte = dayjs(end, "DD.MM.YYYY").toISOString()
-    } else {
-      filter.date_created = { _lte: new Date().toISOString() }
-    }
+    } 
 
     if (start) {
       filter.date_created._gte = dayjs(start, "DD.MM.YYYY").toISOString()
